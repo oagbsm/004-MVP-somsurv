@@ -122,17 +122,34 @@
         }
 
         document.getElementById('surveyForm').addEventListener('submit', function (e) {
-            // Check if all questions are answered
+            let valid = true;  // Flag to track if form is valid
             const unansweredQuestions = [];
+
+            // Validate all required inputs (text, rating, dropdown, true/false)
             this.querySelectorAll('input[required], select[required]').forEach((element) => {
-                if (!element.value || (element.type === 'checkbox' && !Array.from(element.checked).length)) {
+                if (!element.value) {
                     unansweredQuestions.push(element);
+                    valid = false;
                 }
             });
 
-            if (unansweredQuestions.length > 0) {
-                e.preventDefault(); // Prevent form submission
-                alert('Please complete the entire survey.');
+            // Validate that at least one checkbox is selected per checkbox question
+            const checkboxGroups = document.querySelectorAll('[name^="answers["][name$="][answer][]"]');
+            let checkboxGroupValid = true;
+            checkboxGroups.forEach((checkbox) => {
+                const questionIndex = checkbox.name.match(/answers\[(\d+)\]/)[1];
+                const checkboxes = document.querySelectorAll(`input[name="answers[${questionIndex}][answer][]"]`);
+                const isAnyChecked = Array.from(checkboxes).some((checkbox) => checkbox.checked);
+
+                if (!isAnyChecked) {
+                    unansweredQuestions.push(checkbox);
+                    checkboxGroupValid = false;
+                }
+            });
+
+            if (!checkboxGroupValid || !valid) {
+                e.preventDefault();  // Prevent form submission if any validation fails
+                alert('Please complete the entire survey and select at least one checkbox for checkbox questions.');
             }
         });
     </script>

@@ -71,6 +71,8 @@ Route::get('/business/viewsurvey', [SurveyController::class, 'viewsurvey'])
     Route::get('/business/analytics', [SurveyController::class, 'analytics'])->name('business.view-analytics');
 //view surveys from user side
 
+Route::get('/surveys/{id}/responses', [SurveyController::class, 'showsingle'])->name('survey.showsingle');
+
 
 
 require __DIR__.'/auth.php';

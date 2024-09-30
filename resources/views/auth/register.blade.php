@@ -26,7 +26,7 @@
             <p class="mt-2 text-center text-sm text-gray-600">Fill in your details to sign up.</p>
 
             <!-- Register Form -->
-            <form method="POST" action="{{ route('register') }}" class="mt-8 space-y-6">
+            <form id="registration-form" method="POST" action="{{ route('register') }}" class="mt-8 space-y-6" onsubmit="return validateRoles()">
                 @csrf
 
                 <!-- Name Field -->
@@ -62,13 +62,17 @@
                     <input id="password_confirmation" name="password_confirmation" type="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 </div>
 
+                <!-- Role Selection -->
                 <div class="mb-4">
-                <label for="role" class="block text-gray-700">Register as:</label>
-                <select name="role" id="isrole" class="border p-2 w-full" required>
-                    <option value="2">User</option>
-                    <option value="1">Business</option>
-                </select>
-            </div>
+                    <label class="block text-gray-700">Register as:</label>
+                    <div class="flex items-center">
+                        <input type="radio" id="role_user" name="role" value="2" checked class="mr-2">
+                        <label for="role_user" class="mr-4">User</label>
+
+                        <input type="radio" id="role_business" name="role" value="1" class="mr-2">
+                        <label for="role_business">Business</label>
+                    </div>
+                </div>
 
                 <!-- Submit Button -->
                 <div>

@@ -13,28 +13,32 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach ($surveys as $survey)
                 <div class="bg-white rounded-lg shadow-lg p-6 mb-4 transition-transform transform hover:scale-105 hover:shadow-2xl duration-300">
-                    <h2 class="text-2xl font-semibold text-gray-800">{{ $survey->survey_name }}</h2>
-                    <p class="mt-2 text-gray-600">Total Responses: <span class="font-bold">{{ $analytics[$survey->id]['responses_count'] ?? 0 }}</span></p>
+                    <a href="{{ route('survey.showsingle', ['id' => $survey->id]) }}" class="block">
+                        <h2 class="text-2xl font-semibold text-gray-800">{{ $survey->survey_name }}</h2>
+                        <p class="mt-2 text-gray-600">Total Responses: <span class="font-bold">{{ $analytics[$survey->id]['responses_count'] ?? 0 }}</span></p>
 
-                    <h3 class="text-lg mt-4 text-gray-800">Questions:</h3>
-                    @if (isset($analytics[$survey->id]['questions']))
-                        @foreach ($analytics[$survey->id]['questions'] as $question)
-                            <div class="mb-3 border-b pb-2">
-                                <strong class="text-gray-700">Question:</strong> {{ $question['question_text'] }}<br>
-                                <strong class="text-gray-700">Total Responses:</strong> {{ $question['total_responses'] }}<br>
-                                <strong class="text-gray-700">Answers:</strong> {{ implode(', ', $question['answers']) }}
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-gray-500">No responses for this survey yet.</p>
-                    @endif
+                        <h3 class="text-lg mt-4 text-gray-800">Questions:</h3>
+                        @if (isset($analytics[$survey->id]['questions']))
+                            @foreach ($analytics[$survey->id]['questions'] as $question)
+                                <div class="mb-3 border-b pb-2">
+                                    <strong class="text-gray-700">Question:</strong> {{ $question['question_text'] }}<br>
+                                    <!-- <strong class="text-gray-700">Question type:</strong> {{ $question['question_type'] }}<br> -->
+
+                                    <strong class="text-gray-700">Total Responses:</strong> {{ $question['total_responses'] }}<br>
+                                    <strong class="text-gray-700">Answers:</strong> {{ implode(', ', $question['answers']) }}
+                                </div>
+                            @endforeach
+                        @else
+                            <p class="text-gray-500">No responses for this survey yet.</p>
+                        @endif
+                    </a>
                 </div>
             @endforeach
         </div>
 
-    <div class="mt-6">
-        <a href="{{ route('dashboard') }}" class="inline-block bg-gray-800 text-white rounded-md px-4 py-2 hover:bg-gray-700">Back to Dashboard</a>
-    </div>
+        <div class="mt-6">
+            <a href="{{ route('dashboard') }}" class="inline-block bg-gray-800 text-white rounded-md px-4 py-2 hover:bg-gray-700">Back to Dashboard</a>
+        </div>
     </div>
 </body>
 </html>

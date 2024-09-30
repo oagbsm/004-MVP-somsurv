@@ -142,6 +142,9 @@ public function analytics()
             'questions' => [],
         ];
 
+        // Assuming survey questions are stored as JSON in the database
+        $surveyQuestions = json_decode($survey->questions, true); // Decode JSON questions
+
         // Process each response
         foreach ($responses as $response) {
             $formattedAnswers = json_decode($response->formatted_answers, true); // Decode JSON
@@ -152,10 +155,14 @@ public function analytics()
                 $questionText = $answer['question_text'];
                 $userAnswer = $answer['answer'];
 
+                // Get the question type from the survey's question data
+                $questionType = $surveyQuestions[$questionIndex]['question_type'] ?? 'unknown';
+
                 // Initialize analytics for each question if not already set
                 if (!isset($analytics[$survey->id]['questions'][$questionIndex])) {
                     $analytics[$survey->id]['questions'][$questionIndex] = [
                         'question_text' => $questionText,
+                        'question_type' => $questionType, // Add the question type
                         'answers' => [],
                         'total_responses' => 0, // Initialize total_responses
                     ];
@@ -167,38 +174,72 @@ public function analytics()
             }
         }
     }
-
+// dd($analytics);
     // Pass the analytics data to the view
     return view('business.view-analytics', compact('surveys', 'analytics'));
 }
 
 
 
-public function showResponses($id)
+public function showsingle($id)
 {
-    // Fetch the survey by ID
+    // Fetch the specific survey based on the survey ID
     $survey = Survey::findOrFail($id);
-    
-    // Get the survey name
-    $surveyName = $survey->survey_name;
 
-    // Fetch responses for the survey
+    // Fetch responses for the selected survey
     $responses = Response::where('survey_id', $id)->get();
 
-    // Pass the survey name and responses to the view
-    return view('business.survey-responses', compact('surveyName', 'responses'));
+    // Assuming survey questions are stored as JSON in the database
+    $surveyQuestions = json_decode($survey->questions, true); // Decode JSON questions
+
+    // Initialize an array to store answers grouped by question
+    $questionAnswers = [];
+
+    // Process each response
+    foreach ($responses as $response) {
+        $formattedAnswers = json_decode($response->formatted_answers, true); // Decode JSON
+        
+        // Associate answers with their respective questions
+        foreach ($formattedAnswers as $answer) {
+            $questionIndex = $answer['question_index'];
+            $questionText = $surveyQuestions[$questionIndex]['question_text'] ?? 'Unknown Question';
+            $questionType = $surveyQuestions[$questionIndex]['question_type'] ?? 'unknown'; // Get question type
+            $userAnswer = $answer['answer'];
+
+            // Initialize the question entry if it doesn't exist
+            if (!isset($questionAnswers[$questionIndex])) {
+                $questionAnswers[$questionIndex] = [
+                    'question_text' => $questionText,
+                    'question_type' => $questionType, // Add question type
+                    'answers' => [],
+                    'ratings' => [], // Add a new array to store ratings
+                ];
+            }
+
+            // Add the user's answer to the corresponding question
+            $questionAnswers[$questionIndex]['answers'][] = $userAnswer;
+
+            // If the question type is "rating", store the rating for average calculation
+            if ($questionType === 'rating') {
+                $questionAnswers[$questionIndex]['ratings'][] = (float) $userAnswer; // Ensure it's a float
+            }
+        }
+    }
+
+    // Calculate average ratings for rating type questions
+    foreach ($questionAnswers as $index => $question) {
+        if ($question['question_type'] === 'rating' && !empty($question['ratings'])) {
+            $averageRating = array_sum($question['ratings']) / count($question['ratings']);
+            $questionAnswers[$index]['average_rating'] = round($averageRating, 2); // Store average rating
+        }
+    }
+
+    // Return the view with the survey and grouped answers
+    return view('business.survey-responses', compact('survey', 'questionAnswers', 'responses'));
 }
 
 
 
-public function viewResponses($surveyId)
-{
-    // Fetch responses for the survey
-    $responses = Response::where('survey_id', $surveyId)->get();
-
-    // Return view with responses (create a new view if necessary)
-    return view('business.survey-responses', compact('responses'));
-}
 
 
 

@@ -10,9 +10,8 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h1 class="text-3xl font-bold mb-4">Welcome Back!</h1>
-                    <p class="text-lg mb-4">{{ __("You're logged in!") }}</p>
-                    <h2 class="text-xl font-semibold">Credits: ${{ $completedCount * 0.5 }}</h2>
+   
+                    <h2 class="text-xl font-semibold">Credits: ${{ $completedCount * 0.5 }} Earn credits by watching videos , playing games and completing surveys! </h2>
                 </div>
             </div>
 
