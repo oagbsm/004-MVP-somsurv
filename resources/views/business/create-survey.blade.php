@@ -64,7 +64,7 @@
                     <select name="questions[0][question_type]" class="input-field w-full mt-4" onchange="toggleOptions(this)">
                         <option value="dropdown">Dropdown</option>
                         <option value="rating">Rating</option>
-                        <option value="text">Text</option>
+                        <!-- <option value="text">Text</option> -->
                         <option value="checkbox">Checkboxes</option>
                         <option value="true-false">True/False</option>
                     </select>
@@ -113,7 +113,7 @@
                 <select name="questions[${questionCount}][question_type]" class="input-field w-full mt-4" onchange="toggleOptions(this)">
                     <option value="dropdown">Dropdown</option>
                     <option value="rating">Rating</option>
-                    <option value="text">Text</option>
+                    // <option value="text">Text</option>
                     <option value="checkbox">Checkboxes</option>
                     <option value="true-false">True/False</option>
                 </select>
