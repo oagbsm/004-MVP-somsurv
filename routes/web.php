@@ -48,7 +48,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
-//SURVEY FUNCTIONALITY 
 
 //CREATE SURVEY
 
